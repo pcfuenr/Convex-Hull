@@ -1,8 +1,6 @@
 // Algoritmo extraído de GeeksForGeeks https://www.geeksforgeeks.org/dsa/convex-hull-using-jarvis-algorithm-or-wrapping/
 
-#include <iostream>
 #include <vector>
-#include <algorithm>
 using namespace std;
 
 // returns the cross product of the vectors a -> b and a -> c,
@@ -63,21 +61,4 @@ vector<vector<int>> findConvexHull(vector<vector<int>>& points) {
         return {};
 
     return hull;
-}
-
-int main() {
-    vector<vector<int>> points = {{-2, 1}, {4, 4}, {1, -2}, {1, 1}, {2, 1}};
-
-    vector<vector<int>> res = findConvexHull(points);
-    sort(res.begin(), res.end());
-
-    cout << "[";
-    for (int i = 0; i < res.size(); i++) {
-        if (i > 0)
-            cout << ", ";
-        cout << "[" << res[i][0] << ", " << res[i][1] << "]";
-    }
-    cout << "]" << endl;
-
-    return 0;
 }
