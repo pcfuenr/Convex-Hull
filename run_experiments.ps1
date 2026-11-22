@@ -11,7 +11,7 @@ g++ -std=c++11 -O0 uhr.cpp -o uhr.exe
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 $Files = @(Get-ChildItem -Path "datasets" -File -ErrorAction SilentlyContinue)
-$NumDatasets = [Math]::Min($Files.Count, 5)
+$NumDatasets = $Files.Count
 
 if ($NumDatasets -eq 0) {
     Write-Error "No hay archivos en la carpeta datasets/."

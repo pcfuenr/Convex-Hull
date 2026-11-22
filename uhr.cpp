@@ -36,7 +36,7 @@ inline void validate_input(int argc, char *argv[], std::int64_t& runs,
         std::cerr << "It is recommended for <filename> to have .csv extension and it should not previously exist." << std::endl;
         std::cerr << "<RUNS>: numbers of runs per test case: should be >= 32." << std::endl;
         std::cerr << "<ALGO>: jarvis | dnc | graham" << std::endl;
-        std::cerr << "<DATASET_NUM>: 1..5" << std::endl;
+        std::cerr << "<DATASET_NUM>: 1..N" << std::endl;
         std::exit(EXIT_FAILURE);
     }
 
@@ -75,8 +75,8 @@ inline void validate_input(int argc, char *argv[], std::int64_t& runs,
     }
     std::sort(files.begin(), files.end());
 
-    if (dataset_num < 1 or dataset_num > 5 or dataset_num > (std::int64_t)files.size()) {
-        std::cerr << "<DATASET_NUM> must be between 1 and 5 (and exist in datasets/)." << std::endl;
+    if (dataset_num < 1 or dataset_num > (std::int64_t)files.size()) {
+        std::cerr << "<DATASET_NUM> must be between 1 and " << files.size() << "." << std::endl;
         std::exit(EXIT_FAILURE);
     }
 
