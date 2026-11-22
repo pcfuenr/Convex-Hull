@@ -18,7 +18,7 @@ int main(int argc, char* argv[]) {
 
     std::vector<std::vector<int>> points = {{-2, 1}, {4, 4}, {1, -2}, {1, 1}, {2, 1}};
 
-    std::vector<std::vector<int>> res = findConvexHull(points);
+    std::vector<std::vector<int>> res = jarvis::findConvexHull(points);
     std::sort(res.begin(), res.end());
 
     std::cout << "[";

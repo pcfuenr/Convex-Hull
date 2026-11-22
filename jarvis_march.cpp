@@ -1,17 +1,21 @@
 // Algoritmo extraído de GeeksForGeeks https://www.geeksforgeeks.org/dsa/convex-hull-using-jarvis-algorithm-or-wrapping/
+#ifndef JARVIS_MARCH_CPP
+#define JARVIS_MARCH_CPP
 
 #include <vector>
 using namespace std;
 
+namespace jarvis {
+
 // returns the cross product of the vectors a -> b and a -> c,
 // positive if c is on the left of a -> b, negative if on the right
-long long cross(vector<int>& a, vector<int>& b, vector<int>& c) {
+long long cross(const vector<int>& a, const vector<int>& b, const vector<int>& c) {
     return (long long)(b[0] - a[0]) * (c[1] - a[1]) -
            (long long)(b[1] - a[1]) * (c[0] - a[0]);
 }
 
 // returns the squared distance between the points a and b
-long long distSq(vector<int>& a, vector<int>& b) {
+long long distSq(const vector<int>& a, const vector<int>& b) {
     return (long long)(a[0] - b[0]) * (a[0] - b[0]) +
            (long long)(a[1] - b[1]) * (a[1] - b[1]);
 }
@@ -62,3 +66,7 @@ vector<vector<int>> findConvexHull(vector<vector<int>>& points) {
 
     return hull;
 }
+
+} 
+
+#endif

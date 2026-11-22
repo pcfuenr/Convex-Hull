@@ -1,6 +1,11 @@
+#ifndef DNC_CPP
+#define DNC_CPP
+
 #include <vector>
 #include <algorithm>
 using namespace std;
+
+namespace dnc {
 
 // returns the cross product of the vectors a -> b and a -> c,
 // positive if c is on the left of a -> b, negative if on the right
@@ -142,3 +147,7 @@ vector<vector<int>> findConvexHull(vector<vector<int>>& points) {
 
     return hull;
 }
+
+} 
+
+#endif
