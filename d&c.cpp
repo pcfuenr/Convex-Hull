@@ -135,11 +135,15 @@ vector<vector<int>> findConvexHull(vector<vector<int>>& points) {
     if (n < 3)
         return {};
 
-    // sort the points by x, and by y when x is equal
+    // sort the points by x, and by y when x is equal, removing duplicates
     vector<vector<int>> pts = points;
     sort(pts.begin(), pts.end());
+    pts.erase(unique(pts.begin(), pts.end()), pts.end());
 
-    vector<vector<int>> hull = buildHull(pts, 0, n);
+    if (pts.size() < 3)
+        return {};
+
+    vector<vector<int>> hull = buildHull(pts, 0, pts.size());
 
     // fewer than 3 corners means all the points are collinear
     if (hull.size() < 3)
