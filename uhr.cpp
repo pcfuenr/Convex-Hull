@@ -28,24 +28,24 @@
 #include "graham.cpp"
 
 inline void validate_input(int argc, char *argv[], std::int64_t& runs,
-    std::string& algo, std::vector<std::vector<double>>& points)
+    std::string& algo, std::string& dataset_name,
+    std::vector<std::vector<double>>& points)
 {
     if (argc != 5) {
-        std::cerr << "Usage: <filename> <RUNS> <ALGO> <DATASET_NUM>" << std::endl;
+        std::cerr << "Usage: <filename> <RUNS> <ALGO> <DATASET_NAME>" << std::endl;
         std::cerr << "<filename> is the name of the file where performance data will be written." << std::endl;
         std::cerr << "It is recommended for <filename> to have .csv extension and it should not previously exist." << std::endl;
         std::cerr << "<RUNS>: numbers of runs per test case: should be >= 32." << std::endl;
         std::cerr << "<ALGO>: jarvis | dnc | graham" << std::endl;
-        std::cerr << "<DATASET_NUM>: 1..N" << std::endl;
+        std::cerr << "<DATASET_NAME>: file name inside datasets/, for example: circulo_100.txt" << std::endl;
         std::exit(EXIT_FAILURE);
     }
 
     // Read command line arguments
-    std::int64_t dataset_num;
     try {
         runs = std::stoll(argv[2]);
         algo = argv[3];
-        dataset_num = std::stoll(argv[4]);
+        dataset_name = argv[4];
     } catch (std::invalid_argument const& ex) {
         std::cerr << "std::invalid_argument::what(): " << ex.what() << std::endl;
         std::exit(EXIT_FAILURE);
@@ -75,12 +75,19 @@ inline void validate_input(int argc, char *argv[], std::int64_t& runs,
     }
     std::sort(files.begin(), files.end());
 
-    if (dataset_num < 1 or dataset_num > (std::int64_t)files.size()) {
-        std::cerr << "<DATASET_NUM> must be between 1 and " << files.size() << "." << std::endl;
+    std::string selected_file;
+    for (const std::string& file : files) {
+        const std::string file_name = file.substr(file.find_last_of("/\\") + 1);
+        if (file_name == dataset_name)
+            selected_file = file;
+    }
+
+    if (selected_file.empty()) {
+        std::cerr << "Unknown dataset name: " << dataset_name << std::endl;
         std::exit(EXIT_FAILURE);
     }
 
-    std::ifstream data_file(files[dataset_num - 1]);
+    std::ifstream data_file(selected_file);
     std::string line;
     while (std::getline(data_file, line)) {
         for (char& c : line)
@@ -92,7 +99,7 @@ inline void validate_input(int argc, char *argv[], std::int64_t& runs,
     }
 
     if (points.empty()) {
-        std::cerr << "Selected dataset file is empty or unreadable: " << files[dataset_num - 1] << std::endl;
+        std::cerr << "Selected dataset file is empty or unreadable: " << selected_file << std::endl;
         std::exit(EXIT_FAILURE);
     }
 }
@@ -159,8 +166,9 @@ int main(int argc, char *argv[])
     // Validate and sanitize input
     std::int64_t runs;
     std::string algo;
+    std::string dataset_name;
     std::vector<std::vector<double>> points;
-    validate_input(argc, argv, runs, algo, points);
+    validate_input(argc, argv, runs, algo, dataset_name, points);
 
     // Set up clock variables
     std::int64_t n = points.size(), i;
@@ -174,7 +182,12 @@ int main(int argc, char *argv[])
     // File to write time data
     std::ofstream time_data;
     time_data.open(argv[1]);
-    time_data << "n,t_mean,t_stdev,t_Q0,t_Q1,t_Q2,t_Q3,t_Q4" << std::endl;
+    time_data << "dataset,n,t_mean,t_stdev,t_Q0,t_Q1,t_Q2,t_Q3,t_Q4" << std::endl;
+
+    std::string dataset_label = dataset_name;
+    const std::size_t extension = dataset_label.find_last_of('.');
+    if (extension != std::string::npos)
+        dataset_label.erase(extension);
 
     // Begin testing
     std::cout << "\033[0;36mRunning tests...\033[0m" << std::endl << std::endl;
@@ -212,7 +225,7 @@ int main(int argc, char *argv[])
 
     quartiles(times, q);
 
-    time_data << n << "," << mean_time << "," << time_stdev << ",";
+    time_data << dataset_label << "," << n << "," << mean_time << "," << time_stdev << ",";
     time_data << q[0] << "," << q[1] << "," << q[2] << "," << q[3] << "," << q[4] << std::endl;
 
     // This is to keep loading bar after testing

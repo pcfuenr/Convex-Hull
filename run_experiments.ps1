@@ -10,7 +10,7 @@ Write-Host "Compilando uhr.cpp..." -ForegroundColor Cyan
 g++ -std=c++11 -O0 uhr.cpp -o uhr.exe
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
-$Files = @(Get-ChildItem -Path "datasets" -File -ErrorAction SilentlyContinue)
+$Files = @(Get-ChildItem -Path "datasets" -File -ErrorAction SilentlyContinue | Sort-Object Name)
 $NumDatasets = $Files.Count
 
 if ($NumDatasets -eq 0) {
@@ -20,10 +20,12 @@ if ($NumDatasets -eq 0) {
 
 New-Item -ItemType Directory -Force -Path $OutDir | Out-Null
 
-for ($ds = 1; $ds -le $NumDatasets; $ds++) {
+foreach ($dataset in $Files) {
+    $DatasetName = $dataset.BaseName
+
     foreach ($algo in $Algos) {
-        Write-Host ">>> Ejecutando $algo en dataset $ds ($Runs corridas)..." -ForegroundColor Yellow
-        .\uhr.exe "$OutDir\${algo}_dataset${ds}.csv" $Runs $algo $ds
+        Write-Host ">>> Ejecutando $algo en dataset $DatasetName ($Runs corridas)..." -ForegroundColor Yellow
+        .\uhr.exe "$OutDir\${algo}_${DatasetName}.csv" $Runs $algo $dataset.Name
     }
 }
 
