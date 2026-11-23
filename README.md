@@ -1,7 +1,10 @@
 # PROYECTO CONVEX HULL EDAA
 
 En este repositorio se investigará, implementará, evaluará y comparará 3 algoritmos para
-resolver el problema de CONVEX HULL, estos algoritmos serán:
+resolver el problema de Convex Hull, estos algoritmos serán:
+- Jarvis March
+- Divide & Conquer
+- Graham Scan
 
 ## Para ejecutar
 Se compila el main con
@@ -26,3 +29,11 @@ python visual.py
 ```
 
 Que desplegará un input para ingresar la ruta donde se encuentra el archivo con las coordenadas a graficar.
+
+## Para experimentar
+El script de experimentación es ejecutable en Windows, para su correcto funcionamiento es necesario que `/datasets/` contenga grafos.
+
+```
+.\run_experiments.ps1
+```
+Compilará `uhr.cpp` y experimentará los datasets que encuentre en el directorio mencionado anteriormente, finalmente, exporta todos los resultados en formato `.csv` al directorio `/resultados/`.
