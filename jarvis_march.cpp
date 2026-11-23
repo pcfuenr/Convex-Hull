@@ -3,25 +3,27 @@
 #define JARVIS_MARCH_CPP
 
 #include <vector>
+#include <cmath>
 using namespace std;
 
 namespace jarvis {
+const double EPS = 1e-9;
 
 // returns the cross product of the vectors a -> b and a -> c,
 // positive if c is on the left of a -> b, negative if on the right
-long long cross(const vector<int>& a, const vector<int>& b, const vector<int>& c) {
-    return (long long)(b[0] - a[0]) * (c[1] - a[1]) -
-           (long long)(b[1] - a[1]) * (c[0] - a[0]);
+double cross(const vector<double>& a, const vector<double>& b, const vector<double>& c) {
+    return (b[0] - a[0]) * (c[1] - a[1]) -
+           (b[1] - a[1]) * (c[0] - a[0]);
 }
 
 // returns the squared distance between the points a and b
-long long distSq(const vector<int>& a, const vector<int>& b) {
-    return (long long)(a[0] - b[0]) * (a[0] - b[0]) +
-           (long long)(a[1] - b[1]) * (a[1] - b[1]);
+double distSq(const vector<double>& a, const vector<double>& b) {
+    return (a[0] - b[0]) * (a[0] - b[0]) +
+           (a[1] - b[1]) * (a[1] - b[1]);
 }
 
 // Time Complexity: O(n * h), Auxiliary Space: O(h), where h is the number of corners
-vector<vector<int>> findConvexHull(vector<vector<int>>& points) {
+vector<vector<double>> findConvexHull(vector<vector<double>>& points) {
     int n = points.size();
 
     // a polygon needs at least 3 points
@@ -36,7 +38,7 @@ vector<vector<int>> findConvexHull(vector<vector<int>>& points) {
             start = i;
     }
 
-    vector<vector<int>> hull;
+    vector<vector<double>> hull;
     int p = start;
 
     do {
@@ -46,14 +48,14 @@ vector<vector<int>> findConvexHull(vector<vector<int>>& points) {
         int q = (p + 1) % n;
 
         for (int r = 0; r < n; r++) {
-            long long c = cross(points[p], points[q], points[r]);
+            double c = cross(points[p], points[q], points[r]);
 
             // r is on the right of p -> q, so q cannot be the next corner
-            if (c < 0)
+            if (c < -EPS)
                 q = r;
 
             // r is collinear with p and q, so keep the farthest point from p
-            else if (c == 0 && distSq(points[p], points[r]) > distSq(points[p], points[q]))
+            else if (fabs(c) <= EPS && distSq(points[p], points[r]) > distSq(points[p], points[q]))
                 q = r;
         }
 

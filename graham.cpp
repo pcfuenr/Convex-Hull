@@ -34,7 +34,7 @@ double distSq(Point a, Point b) {
 }
 
  // Function to find the convex hull of a set of 2D points
-vector<vector<int>> findConvexHull(vector<vector<int>>& points) {
+vector<vector<double>> findConvexHull(vector<vector<double>>& points) {
 
     // Store number of points points
     int n = points.size();
@@ -45,7 +45,7 @@ vector<vector<int>> findConvexHull(vector<vector<int>>& points) {
     // Convert points 2D vector into vector of Point structures
     vector<Point> a;
     for (auto& p : points) {
-        a.push_back({(double)p[0], (double)p[1]});
+        a.push_back({p[0], p[1]});
     }
 
     // Find the point with the lowest y-coordinate (and leftmost in case of tie)
@@ -83,10 +83,10 @@ vector<vector<int>> findConvexHull(vector<vector<int>>& points) {
     // If fewer than 3 points in the final hull, return {-1}
     if (st.size() < 3) return {{-1}};
 
-    // Convert the final hull into a vector of vectors of integers
-    vector<vector<int>> result;
+    // Convert the final hull into a vector of vectors of doubles
+    vector<vector<double>> result;
     for (auto& p : st) {
-        result.push_back({(int)p.x, (int)p.y});
+        result.push_back({p.x, p.y});
     }
 
     return result;

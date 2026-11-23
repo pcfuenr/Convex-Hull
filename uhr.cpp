@@ -28,7 +28,7 @@
 #include "graham.cpp"
 
 inline void validate_input(int argc, char *argv[], std::int64_t& runs,
-    std::string& algo, std::vector<std::vector<int>>& points)
+    std::string& algo, std::vector<std::vector<double>>& points)
 {
     if (argc != 5) {
         std::cerr << "Usage: <filename> <RUNS> <ALGO> <DATASET_NUM>" << std::endl;
@@ -88,7 +88,7 @@ inline void validate_input(int argc, char *argv[], std::int64_t& runs,
         std::stringstream ss(line);
         double x, y;
         if (ss >> x >> y)
-            points.push_back({(int)std::round(x), (int)std::round(y)});
+            points.push_back({x, y});
     }
 
     if (points.empty()) {
@@ -159,7 +159,7 @@ int main(int argc, char *argv[])
     // Validate and sanitize input
     std::int64_t runs;
     std::string algo;
-    std::vector<std::vector<int>> points;
+    std::vector<std::vector<double>> points;
     validate_input(argc, argv, runs, algo, points);
 
     // Set up clock variables
