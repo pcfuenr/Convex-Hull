@@ -155,6 +155,119 @@ vector<vector<double>> findConvexHull(vector<vector<double>>& points) {
     return hull;
 }
 
+// returns true if two points are equal within EPS
+bool isEqual(const vector<double>& a, const vector<double>& b) {
+    return fabs(a[0] - b[0]) <= EPS && fabs(a[1] - b[1]) <= EPS;
+}
+
+// Incrementally inserts a single point p into an existing CCW convex hull.
+// Returns true if the hull changed, false if p lies inside or on the boundary.
+// Time Complexity: O(h), where h is the current number of vertices in hull.
+bool insertPoint(vector<vector<double>>& hull, const vector<double>& p) {
+    int h = hull.size();
+
+    // Ignore duplicate vertices already on the hull
+    for (int i = 0; i < h; i++) {
+        if (isEqual(hull[i], p))
+            return false;
+    }
+
+    // Base cases when there are fewer than 3 points in the hull
+    if (h == 0) {
+        hull.push_back(p);
+        return true;
+    }
+    if (h == 1) {
+        hull.push_back(p);
+        return true;
+    }
+    if (h == 2) {
+        double c = cross(hull[0], hull[1], p);
+        if (fabs(c) <= EPS) {
+            // Collinear: keep only the two extreme points
+            vector<vector<double>> three = {hull[0], hull[1], p};
+            vector<double> lo = three[0], hi = three[0];
+            for (const auto& q : three) {
+                if (isSmaller(q, lo)) lo = q;
+                if (isSmaller(hi, q)) hi = q;
+            }
+            bool changed = !(isEqual(lo, hull[0]) && isEqual(hi, hull[1])) &&
+                           !(isEqual(lo, hull[1]) && isEqual(hi, hull[0]));
+            hull = {lo, hi};
+            return changed;
+        }
+        hull.push_back(p);
+        if (c < -EPS)
+            swap(hull[1], hull[2]); // enforce CCW order
+        return true;
+    }
+
+    // 1. Determine which directed edges (i -> next) are visible from p.
+    // An edge of a CCW polygon is visible iff p lies strictly to its right.
+    vector<bool> visible(h, false);
+    bool anyVisible = false;
+    for (int i = 0; i < h; i++) {
+        if (cross(hull[i], hull[(i + 1) % h], p) < -EPS) {
+            visible[i] = true;
+            anyVisible = true;
+        }
+    }
+
+    // 2. If no edge is visible, p is inside or on the boundary -> hull unchanged
+    if (!anyVisible)
+        return false;
+
+    // 3. Find the two tangent vertices delimiting the contiguous visible arc:
+    //    start: first vertex of the visible arc (!visible[prev] && visible[i])
+    //    end:   last vertex of the visible arc  (visible[prev] && !visible[i])
+    int start = -1, end = -1;
+    for (int i = 0; i < h; i++) {
+        int prev = (i - 1 + h) % h;
+        if (!visible[prev] && visible[i])
+            start = i;
+        if (visible[prev] && !visible[i])
+            end = i;
+    }
+
+    if (start == -1 || end == -1)
+        return false;
+
+    // 4. Rebuild hull in CCW order: p followed by non-visible vertices from end to start
+    vector<vector<double>> raw;
+    raw.reserve(h + 1);
+    raw.push_back(p);
+    int idx = end;
+    while (true) {
+        raw.push_back(hull[idx]);
+        if (idx == start)
+            break;
+        idx = (idx + 1) % h;
+    }
+
+    // 5. Remove vertices that became collinear with their neighbours (e.g. p on edge extension)
+    int m = raw.size();
+    vector<vector<double>> clean;
+    clean.reserve(m);
+    for (int i = 0; i < m; i++) {
+        if (fabs(cross(raw[(i - 1 + m) % m], raw[i], raw[(i + 1) % m])) > EPS)
+            clean.push_back(raw[i]);
+    }
+
+    hull = move(clean);
+    return true;
+}
+
+// Incrementally inserts a batch of new points into an existing CCW convex hull.
+// Returns the number of points that actually modified the hull.
+int insertPoints(vector<vector<double>>& hull, const vector<vector<double>>& newPoints) {
+    int changes = 0;
+    for (const auto& p : newPoints) {
+        if (insertPoint(hull, p))
+            changes++;
+    }
+    return changes;
+}
+
 } 
 
 #endif
