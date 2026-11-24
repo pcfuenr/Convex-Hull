@@ -1,0 +1,2 @@
+dataset,n,t_mean,t_stdev,t_Q0,t_Q1,t_Q2,t_Q3,t_Q4
+gaussiano_10,10,73540.6,28975.8,45200,54525,69950,78675,194700
