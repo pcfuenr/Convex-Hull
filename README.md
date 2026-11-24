@@ -14,13 +14,13 @@ pip install -r requirements.txt
 Se compila el main con
 
 ```
-g++ main.cpp -o main
+g++ -std=c++17 -O2 main.cpp -o main.exe
 ```
 
 Y se ejecuta con
 
 ```
-.\main <coordenadas_resultantes>.csv
+.\main <coordenadas_resultantes>.csv [dataset.txt]
 ```
 
 Donde `<coordenadas_resultantes>.csv` corresponde a un archivo CSV que guarda las coordenadas de los puntos y hull resultantes del algoritmo para luego graficarlos.

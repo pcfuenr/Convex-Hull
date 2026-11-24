@@ -64,13 +64,13 @@ int main(int argc, char* argv[]) {
     }
     coords << "step,type,x,y,changed\n";
 
-    // 1. Calculo inicial del Convex Hull con Divide & Conquer O(n log n)
+    // Calculo inicial del Convex Hull con dnc
     std::vector<std::vector<double>> hull = dnc::findConvexHull(points);
 
     std::cout << "Convex Hull inicial (" << hull.size() << " vertices): ";
     printHull(hull);
 
-    // Exportar paso 0 (estado inicial)
+    // estado inicial
     for (const auto& p : points) {
         coords << "0,point," << p[0] << "," << p[1] << ",0\n";
     }
@@ -78,7 +78,7 @@ int main(int argc, char* argv[]) {
         coords << "0,hull," << p[0] << "," << p[1] << ",0\n";
     }
 
-    // 2. Insercion incremental interactiva de nuevos puntos en O(h)
+    // Escenario incremental
     std::cout << "\nInserta nuevos puntos en formato 'x y' (o escribe 'q' para terminar):" << std::endl;
     int step = 0;
     std::string line;
