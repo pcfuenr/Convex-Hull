@@ -160,9 +160,9 @@ bool isEqual(const vector<double>& a, const vector<double>& b) {
     return fabs(a[0] - b[0]) <= EPS && fabs(a[1] - b[1]) <= EPS;
 }
 
-// Incrementally inserts a single point p into an existing CCW convex hull.
-// Returns true if the hull changed, false if p lies inside or on the boundary.
-// Time Complexity: O(h), where h is the current number of vertices in hull.
+// Incrementally inserts a single point p into an existing CCW convex hull
+// Returns true if the hull changed, false if p lies inside or on the boundary
+// Time Complexity: O(h), where h is the current number of vertices in hull
 bool insertPoint(vector<vector<double>>& hull, const vector<double>& p) {
     int h = hull.size();
 
@@ -184,7 +184,7 @@ bool insertPoint(vector<vector<double>>& hull, const vector<double>& p) {
     if (h == 2) {
         double c = cross(hull[0], hull[1], p);
         if (fabs(c) <= EPS) {
-            // Collinear: keep only the two extreme points
+            // Keep only the two extreme points
             vector<vector<double>> three = {hull[0], hull[1], p};
             vector<double> lo = three[0], hi = three[0];
             for (const auto& q : three) {
@@ -198,11 +198,11 @@ bool insertPoint(vector<vector<double>>& hull, const vector<double>& p) {
         }
         hull.push_back(p);
         if (c < -EPS)
-            swap(hull[1], hull[2]); // enforce CCW order
+            swap(hull[1], hull[2]); // Enforce CCW order
         return true;
     }
 
-    // 1. Determine which directed edges (i -> next) are visible from p.
+    // Determine which directed edges are visible from p.
     // An edge of a CCW polygon is visible iff p lies strictly to its right.
     vector<bool> visible(h, false);
     bool anyVisible = false;
@@ -213,13 +213,13 @@ bool insertPoint(vector<vector<double>>& hull, const vector<double>& p) {
         }
     }
 
-    // 2. If no edge is visible, p is inside or on the boundary -> hull unchanged
+    // If no edge is visible, p is inside or on the boundary -> hull unchanged
     if (!anyVisible)
         return false;
 
-    // 3. Find the two tangent vertices delimiting the contiguous visible arc:
-    //    start: first vertex of the visible arc (!visible[prev] && visible[i])
-    //    end:   last vertex of the visible arc  (visible[prev] && !visible[i])
+    // Find the two tangent vertices delimiting the contiguous visible arc:
+    // start: first vertex of the visible arc 
+    // end:   last vertex of the visible arc  
     int start = -1, end = -1;
     for (int i = 0; i < h; i++) {
         int prev = (i - 1 + h) % h;
@@ -232,7 +232,7 @@ bool insertPoint(vector<vector<double>>& hull, const vector<double>& p) {
     if (start == -1 || end == -1)
         return false;
 
-    // 4. Rebuild hull in CCW order: p followed by non-visible vertices from end to start
+    // Rebuild hull in CCW order: p followed by non-visible vertices from end to start
     vector<vector<double>> raw;
     raw.reserve(h + 1);
     raw.push_back(p);
@@ -244,7 +244,7 @@ bool insertPoint(vector<vector<double>>& hull, const vector<double>& p) {
         idx = (idx + 1) % h;
     }
 
-    // 5. Remove vertices that became collinear with their neighbours (e.g. p on edge extension)
+    // Remove vertices that became collinear with their neighbours 
     int m = raw.size();
     vector<vector<double>> clean;
     clean.reserve(m);

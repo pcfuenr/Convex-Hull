@@ -70,7 +70,7 @@ int main(int argc, char* argv[]) {
     std::cout << "Convex Hull inicial (" << hull.size() << " vertices): ";
     printHull(hull);
 
-    // estado inicial
+    // Estado inicial
     for (const auto& p : points) {
         coords << "0,point," << p[0] << "," << p[1] << ",0\n";
     }
