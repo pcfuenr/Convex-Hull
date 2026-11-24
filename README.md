@@ -37,3 +37,9 @@ El script de experimentación es ejecutable en Windows, para su correcto funcion
 .\run_experiments.ps1
 ```
 Compilará `uhr.cpp` y experimentará los datasets que encuentre en el directorio mencionado anteriormente, finalmente, exporta todos los resultados en formato `.csv` al directorio `/resultados/`.
+
+## Para demostración paso a paso:
+
+Aparecera 5 iteraciones del algoritmo divide and conquer de manera visual, con 2 botones para retroceder o avanzar en la iteración
+
+python visual.py demo_incremental.csv
