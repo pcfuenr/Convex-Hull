@@ -6,6 +6,10 @@ resolver el problema de Convex Hull, estos algoritmos serán:
 - Divide & Conquer
 - Graham Scan
 
+## Primero instalar requirements:
+
+pip install -r requirements.txt
+
 ## Para ejecutar
 Se compila el main con
 
